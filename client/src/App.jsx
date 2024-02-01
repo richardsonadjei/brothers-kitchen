@@ -8,6 +8,13 @@ import SignIn from './Pages/SignIn';
 import Home from './Pages/Home';
 import SignUp from './pages/SignUp';
 import MeatSales from './pages/MeatSales';
+import PurchaseIngredients from './pages/PurchaseIngredient';
+import DailySalesReport from './pages/reports/DailyMeatSalesReport';
+import MeatSalesWithinAPeriodReport from './pages/reports/MeatSalesWithinAPeriodReport';
+import GasPurchase from './pages/GasPurchase';
+import PlatesAndBowlsPurchase from './pages/PlatesAndBowlPurchase';
+import BusinessAssetsPurchase from './pages/BusinessAssetsPurchase';
+import IngredientPurchaseReport from './pages/reports/IngredientPurchaseReport';
 
 
 
@@ -27,6 +34,13 @@ export default function App() {
           <Route path='/' element={<Home/>} />
           <Route path='/profile' element={<Profile/>} />
           <Route path='/add-meat-sale' element={<MeatSales/>} />
+          <Route path='/purchase-ingreident' element={<PurchaseIngredients/>} />
+          <Route path='/daily-meat-sales-report' element={<DailySalesReport/>} />
+          <Route path='/period-meat-sales-report' element={<MeatSalesWithinAPeriodReport/>} />
+          <Route path='/gas-purchase' element={<GasPurchase/>} />
+          <Route path='/plates-purchase' element={<PlatesAndBowlsPurchase/>} />
+          <Route path='/business-assets-purchase' element={<BusinessAssetsPurchase/>} />
+          <Route path='/ingedient-purchase-report' element={<IngredientPurchaseReport/>} />
          
          
         </Route>
