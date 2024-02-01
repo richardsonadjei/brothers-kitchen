@@ -51,7 +51,7 @@ const PurchaseIngredients = () => {
       // Navigate to '/' after 3 seconds
       setTimeout(() => {
         window.location.href = '/';
-      }, 3000);
+      }, 2000);
     } catch (error) {
       // Handle errors and show an error message
       console.error('Error recording ingredient purchase:', error);

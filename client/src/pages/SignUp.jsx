@@ -66,7 +66,8 @@ const SignUp = () => {
         <Col md={{ size: 6, offset: 3 }}>
           <Form onSubmit={handleSubmit}>
             <h2 className="text-black mb-4">Sign Up</h2>
-
+            {successMessage && <div className="alert alert-success mt-3">{successMessage}</div>}
+          {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
             <Row form>
               <Col md={6}>
                 <FormGroup>
@@ -185,8 +186,7 @@ const SignUp = () => {
             <Button color="primary" type="submit">Sign Up</Button>
           </Form>
 
-          {successMessage && <div className="alert alert-success mt-3">{successMessage}</div>}
-          {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
+        
         </Col>
       </Row>
     </Container>

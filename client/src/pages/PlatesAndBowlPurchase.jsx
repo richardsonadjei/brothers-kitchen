@@ -62,7 +62,8 @@ const PlatesAndBowlsPurchase = () => {
   return (
     <Container>
       <h2 className="mt-4 mb-4">Plates and Bowls Purchase Form</h2>
-
+      {errorMessage && <Alert color="danger">{errorMessage}</Alert>}
+        {successMessage && <Alert color="success">{successMessage}</Alert>}
       <Form>
         <Row form>
           <Col md={6}>
@@ -105,8 +106,7 @@ const PlatesAndBowlsPurchase = () => {
           />
         </FormGroup>
 
-        {errorMessage && <Alert color="danger">{errorMessage}</Alert>}
-        {successMessage && <Alert color="success">{successMessage}</Alert>}
+      
 
         <Button color="primary" onClick={handlePlatesAndBowlsPurchase}>
           Record Plates and Bowls Purchase
