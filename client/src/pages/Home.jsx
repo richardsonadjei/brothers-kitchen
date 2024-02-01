@@ -20,7 +20,7 @@ const Home = () => {
               <Card className="animated-card card-sales" style={{ background: `url("/orphiles 1.png")`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', height: '200px', borderRadius: '15px', border: '2px solid white' }}>
                 <Card.Body>
                   <FaUtensils className="icon" style={{ color: '#FFA500' }} />
-                  <Card.Title style={{ textDecoration: 'none', color: 'white', fontSize: '18px' }}>Meat Sales</Card.Title>
+                  <Card.Title style={{ textDecoration: 'none', color: 'white', fontSize: '24px', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>Meat Sales</Card.Title>
                 </Card.Body>
               </Card>
             </Link>
@@ -31,7 +31,7 @@ const Home = () => {
               <Card className="animated-card card-expense" style={{ background: `url("/fufu.jpg")`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', height: '200px', borderRadius: '15px', border: '2px solid white' }}>
                 <Card.Body>
                   <FaUtensils className="icon" style={{ color: '#FFA500' }} />
-                  <Card.Title style={{ color: 'white', fontSize: '18px' }}>Fufu And Meat</Card.Title>
+                  <Card.Title style={{ color: 'white', fontSize: '24px', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>Fufu And Meat</Card.Title>
                 </Card.Body>
               </Card>
             </Link>
