@@ -111,9 +111,17 @@ export const signin = async (req, res, next) => {
   }
 };
 
+
 export const updateProfile = async (req, res, next) => {
   const userId = req.params.id;
   const { userName, email, password, newPassword, confirmPassword } = req.body;
+
+  console.log('userId:', userId);
+console.log('userName:', userName);
+console.log('email:', email);
+console.log('password:', password);
+console.log('newPassword:', newPassword);
+console.log('confirmPassword:', confirmPassword);
 
   try {
     // Authentication check
@@ -139,7 +147,7 @@ export const updateProfile = async (req, res, next) => {
     if (newPassword) {
       // Hash the new password before saving
       const saltRounds = 10;
-      const hashedPassword = await bcryptjs.hash(newPassword, saltRounds);
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
       user.password = hashedPassword;
     }
 
@@ -153,6 +161,7 @@ export const updateProfile = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 

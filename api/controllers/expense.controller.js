@@ -65,15 +65,17 @@ export { recordGasPurchase };
 // controllers/platesAndBowlsPurchase.controller.js
 import PlatesAndBowlsPurchase from '../models/platesAndBowls.model.js';
 
+
 const recordPlatesAndBowlsPurchase = async (req, res) => {
   try {
     // Extract data from the request body
-    const { amount, purchasedBy } = req.body;
+    const { amount, purchasedBy, description } = req.body;
 
     // Create a new PlatesAndBowlsPurchase instance
     const newPlatesAndBowlsPurchase = new PlatesAndBowlsPurchase({
       amount,
       purchasedBy,
+      description, // Include the description field
     });
 
     // Save the plates and bowls purchase record
@@ -153,3 +155,120 @@ const viewIngredientPurchases = async (req, res) => {
 };
 
 export { viewIngredientPurchases };
+
+
+// controllers/gasPurchaseController.js
+
+const viewGasPurchases = async (req, res) => {
+  try {
+    // Extract startDate and endDate from request query parameters
+    const { startDate, endDate } = req.query;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
+
+    // Fetch gas purchases within the specified period
+    const gasPurchases = await GasPurchase.find({
+      date: {  // Use the correct field name here
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Respond with the retrieved gas purchases
+    res.status(200).json({
+      success: true,
+      message: 'Gas purchases retrieved successfully',
+      gasPurchases,
+    });
+  } catch (error) {
+    // Handle errors and respond with an error message
+    console.error('Error retrieving gas purchases:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving gas purchases',
+      error: error.message,
+    });
+  }
+};
+
+export { viewGasPurchases };
+
+
+
+
+const viewAssetsPurchases = async (req, res) => {
+  try {
+    // Extract startDate and endDate from request query parameters
+    const { startDate, endDate } = req.query;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
+
+    // Fetch assets purchases within the specified period
+    const assetsPurchases = await BusinessAssetsPurchase.find({
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Respond with the retrieved assets purchases
+    res.status(200).json({
+      success: true,
+      message: 'Assets purchases retrieved successfully',
+      assetsPurchases,
+    });
+  } catch (error) {
+    // Handle errors and respond with an error message
+    console.error('Error retrieving assets purchases:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving assets purchases',
+      error: error.message,
+    });
+  }
+};
+
+export { viewAssetsPurchases };
+
+
+
+
+const viewPlatesAndBowlsPurchases = async (req, res) => {
+  try {
+    // Extract startDate and endDate from request query parameters
+    const { startDate, endDate } = req.query;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z');
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z');
+
+    // Fetch plates and bowls purchases within the specified period
+    const platesAndBowlsPurchases = await PlatesAndBowlsPurchase.find({
+      date: {
+        $gte: parsedStartDate,
+        $lte: parsedEndDate,
+      },
+    });
+
+    // Respond with the retrieved plates and bowls purchases
+    res.status(200).json({
+      success: true,
+      message: 'Plates and bowls purchases retrieved successfully',
+      platesAndBowlsPurchases,
+    });
+  } catch (error) {
+    // Handle errors and respond with an error message
+    console.error('Error retrieving plates and bowls purchases:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving plates and bowls purchases',
+      error: error.message,
+    });
+  }
+};
+
+export { viewPlatesAndBowlsPurchases };

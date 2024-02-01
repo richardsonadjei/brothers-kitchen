@@ -15,6 +15,9 @@ import GasPurchase from './pages/GasPurchase';
 import PlatesAndBowlsPurchase from './pages/PlatesAndBowlPurchase';
 import BusinessAssetsPurchase from './pages/BusinessAssetsPurchase';
 import IngredientPurchaseReport from './pages/reports/IngredientPurchaseReport';
+import GasPurchaseReport from './pages/reports/GasPurchaseReport';
+import AssetsPurchaseReport from './pages/reports/AssetsPurchaseReport';
+import PlatesAndBowlsPurchaseReport from './pages/reports/BowlsPurchaseReport';
 
 
 
@@ -41,6 +44,9 @@ export default function App() {
           <Route path='/plates-purchase' element={<PlatesAndBowlsPurchase/>} />
           <Route path='/business-assets-purchase' element={<BusinessAssetsPurchase/>} />
           <Route path='/ingedient-purchase-report' element={<IngredientPurchaseReport/>} />
+          <Route path='/gas-purchase-report' element={<GasPurchaseReport/>} />
+          <Route path='/assets-purchase-report' element={<AssetsPurchaseReport/>} />
+          <Route path='/bowls-purchase-report' element={<PlatesAndBowlsPurchaseReport/>} />
          
          
         </Route>

@@ -54,12 +54,12 @@ export default function Header() {
 
         <Navbar.Collapse id="basic-navbar-nav" className="menu-items justify-content-end">
           <Nav>
-            <Nav.Link as={Link} to="/" className="text-dark">
+            <Nav.Link as={Link} to="/" className="text-white font-weight-bold">
               Home
             </Nav.Link>
 
             {/* Reports dropdown */}
-            <NavDropdown title="Reports" id="reports-dropdown" className="text-dark">
+            <NavDropdown title="Reports" id="reports-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
               <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
                 Total Daily Meat Sales
               </NavDropdown.Item>
@@ -69,17 +69,20 @@ export default function Header() {
               <NavDropdown.Item as={Link} to="/ingedient-purchase-report">
                 Ingredients Expense Report 
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/all-expense-report">
+              <NavDropdown.Item as={Link} to="/gas-purchase-report">
                  Gas Purchase Report 
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/all-expense-report">
+              <NavDropdown.Item as={Link} to="/bowls-purchase-report">
+                 Bowls And Plates Purchase Report 
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/assets-purchase-report">
                  Assets Purchase Report 
               </NavDropdown.Item>
               {/* Add more reports as needed */}
             </NavDropdown>
 
             {/* Expense dropdown */}
-            <NavDropdown title="Expense" id="expense-dropdown" className="text-dark">
+            <NavDropdown title="Expense" id="expense-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
               <NavDropdown.Item as={Link} to="/purchase-ingreident">
                 Record Ingredients Purchase
               </NavDropdown.Item>
@@ -101,29 +104,29 @@ export default function Header() {
 
             {currentUser ? (
               <>
-                <Nav.Link as={Link} to="/profile" className="text-dark">
+                <Nav.Link as={Link} to="/profile" className="text-white font-weight-bold">
                   <span>{currentUser.userName}</span>
                 </Nav.Link>
 
-                <Nav.Link as={Link} to="/sign-out" className="text-dark">
+                <Nav.Link as={Link} to="/sign-out" className="text-white font-weight-bold">
                   Sign Out
                 </Nav.Link>
 
                 {currentUser.role === 'ceo' && (
-                  <Nav.Link as={Link} to="/sign-up" className="text-dark">
+                  <Nav.Link as={Link} to="/sign-up" className="text-white font-weight-bold">
                     Create New User
                   </Nav.Link>
                 )}
               </>
             ) : (
               <>
-                <Nav.Link as={Link} to="/sign-in" className="text-dark">
+                <Nav.Link as={Link} to="/sign-in" className="text-white font-weight-bold">
                   Sign In
                 </Nav.Link>
 
                 {/* Show "Sign Up" only if the role is not "employee" or "manager" */}
                 {currentUser?.role !== 'employee' && currentUser?.role !== 'manager' && (
-                  <Nav.Link as={Link} to="/sign-up" className="text-dark">
+                  <Nav.Link as={Link} to="/sign-up" className="text-white font-weight-bold">
                     Create New User
                   </Nav.Link>
                 )}

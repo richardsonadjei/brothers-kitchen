@@ -17,6 +17,9 @@ const platesAndBowlsPurchaseSchema = new Schema({
         type: Number,
         required: true,
     },
+    description: {
+        type: String, // Add the description field
+    },
     date: {
         type: Date,
         default: Date.now,

@@ -1,5 +1,6 @@
 // MeatSales.jsx
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import Select from 'react-select';
 
 const meatTypeValues = [
@@ -10,8 +11,9 @@ const meatTypeValues = [
 ];
 
 const MeatSales = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const [meatSales, setMeatSales] = useState([]);
-  const [recordedBy, setRecordedBy] = useState('');
+  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.userName : '');
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [modalData, setModalData] = useState(null);
   const [selectedMeat, setSelectedMeat] = useState(null);
@@ -93,15 +95,16 @@ const MeatSales = () => {
     <div className="meat-sales-container" style={{ backgroundImage: 'url("/orphiles.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '100vh' }}>
       <h1>Record Meat Sale</h1>
       <form style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '20px', borderRadius: '10px' }}>
-      <label htmlFor="meatType" style={{ fontWeight: 'bold', fontSize: '16px' }}>Meat Type:</label>
+      <label htmlFor="meatType" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Meat Type:</label>
         <Select
           id="meatType"
           options={meatTypeValues}
           value={selectedMeat}
           onChange={(value) => setSelectedMeat(value)}
           isSearchable
+          
         />
-        <label htmlFor="quantity" style={{ fontWeight: 'bold', fontSize: '16px' }}>Quantity:</label>
+        <label htmlFor="quantity" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Quantity:</label>
         <input
           type="number"
           id="quantity"
@@ -114,25 +117,26 @@ const MeatSales = () => {
         </button>
 
         <ul>
-          {meatSales.map((sale, index) => (
-            <li key={index}>
-              {sale.meatType} (Quantity: {sale.quantity}) - Subtotal: {sale.subTotal}
-              <button type="button" onClick={() => handleRemoveMeat(index)}>
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
+  {meatSales.map((sale, index) => (
+   <li key={index} style={{ color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '5px' }}>
+      {sale.meatType} (Quantity: {sale.quantity}) - Subtotal: Ghc {sale.subTotal}
+      <button
+        type="button"
+        onClick={() => handleRemoveMeat(index)}
+        style={{ backgroundColor: 'red', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer' }}
+      >
+        Remove
+      </button>
+    </li>
+  ))}
+</ul>
 
-        <label htmlFor="recordedBy" style={{ fontWeight: 'bold', fontSize: '16px' }}>Recorded By:</label>
-        <input
-          type="text"
-          id="recordedBy"
-          value={recordedBy}
-          onChange={(e) => setRecordedBy(e.target.value)}
-        />
 
-        <label htmlFor="paymentMethod" style={{ fontWeight: 'bold', fontSize: '16px' }}>Payment Method:</label>
+
+
+       
+
+        <label htmlFor="paymentMethod" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Payment Method:</label>
         <select
           id="paymentMethod"
           value={paymentMethod}
@@ -142,8 +146,16 @@ const MeatSales = () => {
           <option value="momo">Momo</option>
           {/* Add other payment method options if needed */}
         </select>
+        <label htmlFor="recordedBy" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Recorded By:</label>
+        <input
+          type="text"
+          id="recordedBy"
+          value={recordedBy}
+          onChange={(e) => setRecordedBy(e.target.value)}
+          readOnly
+        />
 
-        <p style={{ fontWeight: 'bold', fontSize: '16px' }}>Total Amount: {meatSales.reduce((total, sale) => total + sale.subTotal, 0)}</p>
+        <p style={{ fontWeight: 'bold', fontSize: '24px', color: 'yellow', backgroundColor: 'rgba(0, 0, 0, 0.5)', }}>Total Amount:Ghc {meatSales.reduce((total, sale) => total + sale.subTotal, 0)}</p>
 
         <button type="button" onClick={handleSubmit}>
           Record Sale

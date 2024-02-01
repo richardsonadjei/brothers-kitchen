@@ -8,6 +8,7 @@ const PlatesAndBowlsPurchase = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [amount, setAmount] = useState('');
   const [purchasedBy, setPurchasedBy] = useState(currentUser ? currentUser.userName : '');
+  const [description, setDescription] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -19,10 +20,14 @@ const PlatesAndBowlsPurchase = () => {
     setPurchasedBy(event.target.value);
   };
 
+  const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
+  };
+
   const handlePlatesAndBowlsPurchase = async () => {
     try {
       // Validate input fields
-      if (!amount) {
+      if (!amount || !description) {
         setErrorMessage('Please fill in all fields');
         return;
       }
@@ -33,7 +38,7 @@ const PlatesAndBowlsPurchase = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount, purchasedBy }),
+        body: JSON.stringify({ amount, purchasedBy, description }),
       });
 
       const data = await response.json();
@@ -87,6 +92,18 @@ const PlatesAndBowlsPurchase = () => {
             </FormGroup>
           </Col>
         </Row>
+
+        <FormGroup>
+          <Label for="description">Description</Label>
+          <Input
+            type="textarea"
+            name="description"
+            id="description"
+            placeholder="Enter description"
+            value={description}
+            onChange={handleDescriptionChange}
+          />
+        </FormGroup>
 
         {errorMessage && <Alert color="danger">{errorMessage}</Alert>}
         {successMessage && <Alert color="success">{successMessage}</Alert>}

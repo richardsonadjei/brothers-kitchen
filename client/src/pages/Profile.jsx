@@ -46,10 +46,14 @@ const Profile = () => {
 
         if (signOutResponse.ok) {
           // Clear user state and navigate to sign-in page after 3 seconds
-          setTimeout(() => {
+          if (signOutResponse.ok) {
             dispatch(updateUserSuccess(null));
             window.location.href = '/sign-in';
-          }, 3000);
+          } else {
+            const errorData = await signOutResponse.json();
+            dispatch(updateUserFailure(errorData.message));
+          }
+          
         } else {
           const errorData = await signOutResponse.json();
           dispatch(updateUserFailure(errorData.message));

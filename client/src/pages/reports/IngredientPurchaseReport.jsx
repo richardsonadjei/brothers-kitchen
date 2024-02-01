@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Table } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Table, Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 const IngredientPurchaseReport = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [ingredientPurchases, setIngredientPurchases] = useState([]);
   const [summaryReport, setSummaryReport] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
@@ -34,6 +36,15 @@ const IngredientPurchaseReport = () => {
     } catch (error) {
       console.error('Error retrieving ingredient purchases:', error);
     }
+  };
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
+  const viewDetails = (record) => {
+    setSelectedRecord(record);
+    toggleModal();
   };
 
   return (
@@ -75,6 +86,7 @@ const IngredientPurchaseReport = () => {
                 <th>Recorded By</th>
                 <th>Ingredient Purchase Number</th>
                 <th>Amount</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -82,10 +94,15 @@ const IngredientPurchaseReport = () => {
                 <tr key={purchase._id}>
                   <td>{index + 1}</td>
                   <td>{purchase.description.map((item) => item.itemName).join(', ')}</td>
-                  <td>{new Date(purchase.purchaseDate).toLocaleDateString()}</td>
+                  <td>{new Date(purchase.purchaseDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
                   <td>{purchase.recordedBy}</td>
                   <td>{purchase.ingredientPurchaseNumber}</td>
-                  <td>${purchase.description.reduce((total, item) => total + item.amount, 0)}</td>
+                  <td>{purchase.description.reduce((total, item) => total + item.amount, 0)}</td>
+                  <td>
+                    <Button color="info" onClick={() => viewDetails(purchase)}>
+                      View Details
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -102,7 +119,7 @@ const IngredientPurchaseReport = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>${summaryReport.overallTotal}</td>
+                    <td>{summaryReport.overallTotal}</td>
                   </tr>
                 </tbody>
               </Table>
@@ -110,6 +127,30 @@ const IngredientPurchaseReport = () => {
           )}
         </>
       )}
+
+      {/* Modal for displaying details */}
+      <Modal isOpen={modalOpen} toggle={toggleModal}>
+        <ModalHeader toggle={toggleModal}>Details for Record</ModalHeader>
+        <ModalBody>
+          {selectedRecord && (
+            <div>
+              <p>Purchase Date: {new Date(selectedRecord.purchaseDate).toLocaleDateString()}</p>
+              <p>Recorded By: {selectedRecord.recordedBy}</p>
+              <p>Ingredient Purchase Number: {selectedRecord.ingredientPurchaseNumber}</p>
+              <h5>Description:</h5>
+              <ul>
+                {selectedRecord.description.map((item, index) => (
+                  <li key={index}>
+                    <p>Item: {item.itemName}</p>
+                    <p>Amount: {item.amount}</p>
+                  </li>
+                ))}
+              </ul>
+              {/* Add more details as needed */}
+            </div>
+          )}
+        </ModalBody>
+      </Modal>
     </Container>
   );
 };
