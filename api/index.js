@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.routes.js';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import meatSalesRouter from './routes/meatSales.routes.js';
 import expenseRouter from './routes/expense.routes.js';
 dotenv.config();
@@ -16,13 +17,23 @@ mongoose
     console.log(err);
   });
 
+
+  const __dirname = path.resolve();
 const app = express();
 app.use(cookieParser());
+
 app.use(express.json());
 
 app.use('/api/', userRouter);
 app.use('/api/', meatSalesRouter);
 app.use('/api/', expenseRouter);
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
+
 
 
 app.use((err, req, res, next) => {
