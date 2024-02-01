@@ -58,28 +58,37 @@ export default function Header() {
               Home
             </Nav.Link>
 
-            {/* Reports dropdown */}
-            <NavDropdown title="Reports" id="reports-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
-              <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
-                Total Daily Meat Sales
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/period-meat-sales-report">
-                Sales Report
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/ingedient-purchase-report">
-                Ingredients Expense Report 
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/gas-purchase-report">
-                 Gas Purchase Report 
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/bowls-purchase-report">
-                 Bowls And Plates Purchase Report 
-              </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/assets-purchase-report">
-                 Assets Purchase Report 
-              </NavDropdown.Item>
-              {/* Add more reports as needed */}
-            </NavDropdown>
+           {/* Reports dropdown */}
+<NavDropdown title="Reports" id="reports-dropdown" style={{ color: 'white', fontWeight: 'bold' }}>
+  {currentUser?.role === 'employee' ? (
+    <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
+      Total Daily Meat Sales
+    </NavDropdown.Item>
+  ) : (
+    <>
+      <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
+        Total Daily Meat Sales
+      </NavDropdown.Item>
+      <NavDropdown.Item as={Link} to="/period-meat-sales-report">
+        Sales Report
+      </NavDropdown.Item>
+      <NavDropdown.Item as={Link} to="/ingedient-purchase-report">
+        Ingredients Expense Report 
+      </NavDropdown.Item>
+      <NavDropdown.Item as={Link} to="/gas-purchase-report">
+        Gas Purchase Report 
+      </NavDropdown.Item>
+      <NavDropdown.Item as={Link} to="/bowls-purchase-report">
+        Bowls And Plates Purchase Report 
+      </NavDropdown.Item>
+      <NavDropdown.Item as={Link} to="/assets-purchase-report">
+        Assets Purchase Report 
+      </NavDropdown.Item>
+      {/* Add more reports as needed */}
+    </>
+  )}
+</NavDropdown>
+
 
             {/* Expense dropdown */}
             <NavDropdown title="Expense" id="expense-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
