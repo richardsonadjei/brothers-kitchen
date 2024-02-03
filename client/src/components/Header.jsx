@@ -58,37 +58,50 @@ export default function Header() {
               Home
             </Nav.Link>
 
-           {/* Reports dropdown */}
-<NavDropdown title="Reports" id="reports-dropdown" style={{ color: 'white', fontWeight: 'bold' }}>
-  {currentUser?.role === 'employee' ? (
-    <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
-      Total Daily Meat Sales
-    </NavDropdown.Item>
-  ) : (
-    <>
-      <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
-        Total Daily Meat Sales
-      </NavDropdown.Item>
-      <NavDropdown.Item as={Link} to="/period-meat-sales-report">
-        Sales Report
-      </NavDropdown.Item>
-      <NavDropdown.Item as={Link} to="/ingedient-purchase-report">
-        Ingredients Expense Report 
-      </NavDropdown.Item>
-      <NavDropdown.Item as={Link} to="/gas-purchase-report">
-        Gas Purchase Report 
-      </NavDropdown.Item>
-      <NavDropdown.Item as={Link} to="/bowls-purchase-report">
-        Bowls And Plates Purchase Report 
-      </NavDropdown.Item>
-      <NavDropdown.Item as={Link} to="/assets-purchase-report">
-        Assets Purchase Report 
-      </NavDropdown.Item>
-      {/* Add more reports as needed */}
-    </>
-  )}
-</NavDropdown>
+            {/* Reports dropdown */}
+            <NavDropdown title="Reports" id="reports-dropdown" style={{ color: 'white', fontWeight: 'bold' }}>
+              {currentUser?.role === 'employee' ? (
+                <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
+                  Total Daily Meat Sales
+                </NavDropdown.Item>
+              ) : (
+                <>
+                  <NavDropdown.Item as={Link} to="/daily-meat-sales-report">
+                    Total Daily Meat Sales
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/period-meat-sales-report">
+                    Sales Report
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/ingedient-purchase-report">
+                    Ingredients Expense Report 
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/gas-purchase-report">
+                    Gas Purchase Report 
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/bowls-purchase-report">
+                    Bowls And Plates Purchase Report 
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/assets-purchase-report">
+                    Assets Purchase Report 
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/income-variations-report">
+                Income Variations Report
+              </NavDropdown.Item>
+                  {/* Add more reports as needed */}
+                </>
+              )}
+            </NavDropdown>
 
+            {/* Meat Issue dropdown */}
+            <NavDropdown title="Meat Issue" id="meat-issue-dropdown" style={{ color: 'white', fontWeight: 'bold' }}>
+              <NavDropdown.Item as={Link} to="/bulk-meat-issue">
+                Issue Meat
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/bulk-meat-issue-report">
+                View Meats Issued
+              </NavDropdown.Item>
+             
+            </NavDropdown>
 
             {/* Expense dropdown */}
             <NavDropdown title="Expense" id="expense-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
@@ -96,18 +109,18 @@ export default function Header() {
                 Record Ingredients Purchase
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/add-other-expense">
-              Record Other Consumable  Purchase
+                Record Other Consumable  Purchase
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/gas-purchase">
-              Record Gas  Purchase
+                Record Gas  Purchase
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/plates-purchase">
-              Record Plates And Bowl Purchase
+                Record Plates And Bowl Purchase
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/business-assets-purchase">
-              Purchase Business Asset
+                Purchase Business Asset
               </NavDropdown.Item>
-              
+
               {/* Add more expense items as needed */}
             </NavDropdown>
 

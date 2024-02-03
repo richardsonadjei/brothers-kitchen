@@ -18,6 +18,12 @@ import IngredientPurchaseReport from './pages/reports/IngredientPurchaseReport';
 import GasPurchaseReport from './pages/reports/GasPurchaseReport';
 import AssetsPurchaseReport from './pages/reports/AssetsPurchaseReport';
 import PlatesAndBowlsPurchaseReport from './pages/reports/BowlsPurchaseReport';
+import CreateBulkMeatIssue from './pages/BulkMeatIssue';
+import BulkMeatIssueReport from './pages/reports/BulkMeatIssueReport';
+import ViewIncomeVariations from './pages/reports/IncomeVariationsReport';
+
+
+
 
 
 
@@ -47,6 +53,9 @@ export default function App() {
           <Route path='/gas-purchase-report' element={<GasPurchaseReport/>} />
           <Route path='/assets-purchase-report' element={<AssetsPurchaseReport/>} />
           <Route path='/bowls-purchase-report' element={<PlatesAndBowlsPurchaseReport/>} />
+          <Route path='/bulk-meat-issue' element={<CreateBulkMeatIssue/>} />
+          <Route path='/bulk-meat-issue-report' element={<BulkMeatIssueReport/>} />
+          <Route path='/income-variations-report' element={<ViewIncomeVariations/>} />
          
          
         </Route>

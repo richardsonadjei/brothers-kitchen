@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import meatSalesRouter from './routes/meatSales.routes.js';
 import expenseRouter from './routes/expense.routes.js';
+import router from './routes/meatIssue.routes.js';
 dotenv.config();
 
 mongoose
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use('/api/', userRouter);
 app.use('/api/', meatSalesRouter);
 app.use('/api/', expenseRouter);
+app.use('/api/', router);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 

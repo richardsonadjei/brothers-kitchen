@@ -78,3 +78,45 @@ const viewMeatSalesByPeriod = async (req, res) => {
 
 export { viewMeatSalesByPeriod };
 
+
+
+// Import necessary modules and models
+import IncomeVariation from '../models/incomeVariation.model.js';
+
+// Controller to create a new income variation record
+export const createIncomeVariation = async (req, res) => {
+  try {
+    const { expectedSalesAmount, actualSalesAmount, meatIssueNumber } = req.body;
+
+    // Create a new income variation record
+    const newIncomeVariation = new IncomeVariation({
+      expectedSalesAmount,
+      actualSalesAmount,
+      meatIssueNumber,
+    });
+
+    // Save the new record to the database
+    await newIncomeVariation.save();
+
+    res.status(201).json({
+      success: true,
+      data: newIncomeVariation,
+      message: 'Income variation record created successfully.',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Controller to view all income variation records
+export const viewAllIncomeVariations = async (req, res) => {
+  try {
+    // Fetch all income variation records
+    const allIncomeVariations = await IncomeVariation.find();
+
+    return res.status(200).json({ success: true, data: allIncomeVariations });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+  }
+};
