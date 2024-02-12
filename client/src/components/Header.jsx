@@ -129,10 +129,10 @@ export default function Header() {
               {/* Expense dropdown */}
               <NavDropdown title="Extras" id="expense-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
               <NavDropdown.Item as={Link} to="/new-meat-type">
-                Add New Meat Type
+                Add New Item To Sell
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/add-other-expense">
-                Record Other Consumable  Purchase
+                View All Items
               </NavDropdown.Item>
              
 
