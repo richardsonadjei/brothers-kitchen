@@ -1,104 +1,69 @@
 import mongoose from 'mongoose';
 
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
 
-const meatTypeValues = ['Intestines', 'Legs', 'Liver', 'Head'];
-const paymentMethodValues = ['cash', 'momo'];
-
-const meatSaleSchema = new Schema(
-  {
-    meatSalesNumber: {
-      type: String,
-      unique: true,
-    },
-    meats: [
-      {
-        type: {
-          type: String,
-          required: true,
-          enum: meatTypeValues,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-        pricePerUnit: {
-          type: Number,
-        },
-        subTotal: {
-          type: Number,
-          // Calculated automatically in the pre-save hook
-        },
-      },
-    ],
-    totalAmount: {
-      type: Number,
-    },
-    paymentMethod: {
-      type: String,
-      default: 'cash',
-      enum: paymentMethodValues,
-    },
-    recordedBy: {
-      type: String,
-      required: true,
-    },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
-    // Add more fields as needed
+const meatSalesSchema = new Schema({
+  meatSalesNumber: {
+    type: String,
+    unique: true
   },
-  {
-    timestamps: true, // Automatically add createdAt and updatedAt fields
-  }
-);
-
-meatSaleSchema.pre('save', async function (next) {
-  try {
-    // Calculate subTotal for each meat item
-    this.meats.forEach((meatItem) => {
-      // Set default prices based on meat type
-      switch (meatItem.type) {
-        case 'Intestines':
-          meatItem.pricePerUnit = 10;
-          break;
-        case 'Legs':
-          meatItem.pricePerUnit = 5;
-          break;
-        case 'Liver':
-          meatItem.pricePerUnit = 10;
-          break;
-        case 'Head':
-          meatItem.pricePerUnit = 10;
-          break;
-        // Add more cases for other meat types if needed
-        default:
-          // Handle default case or raise an error
-          break;
-      }
-
-      meatItem.subTotal = meatItem.quantity * meatItem.pricePerUnit;
-    });
-
-    // Calculate totalAmount as the sum of all subTotals
-    this.totalAmount = this.meats.reduce((total, meatItem) => total + meatItem.subTotal, 0);
-
-    // Generate meatSalesNumber as before
-    const lastRecord = await this.constructor.findOne({}, {}, { sort: { meatSalesNumber: -1 } });
-    const lastMeatSalesNumber = lastRecord && lastRecord.meatSalesNumber
-      ? parseInt(lastRecord.meatSalesNumber.replace('MS', ''))
-      : 0;
-
-    const nextMeatSalesNumber = lastMeatSalesNumber + 1;
-    this.meatSalesNumber = `MS${nextMeatSalesNumber.toString().padStart(4, '0')}`;
-
-    next();
-  } catch (error) {
-    next(error);
+  sales: [{
+    materialName: {
+      type: String,
+      required: true
+    },
+    unitPrice: {
+      type: Number,
+      required: true
+    },
+    quantity: {
+      type: Number,
+      required: true
+    },
+    totalPrice: {
+      type: Number,
+    }
+  }],
+  grandTotal: {
+    type: Number,
+  },
+  salesDate: {
+    type: Date,
+    default: Date.now
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now
+  },
+  recordedBy: {
+    type: String, // Assuming recordedBy is a string field
+    required: true // Adjust this as needed
   }
 });
 
-const MeatSale = mongoose.model('MeatSale', meatSaleSchema);
+// Middleware to auto-generate the meat sales number and calculate total prices
+meatSalesSchema.pre('save', async function (next) {
+  if (!this.meatSalesNumber) {
+    const lastPurchase = await this.constructor.findOne({}, {}, { sort: { 'timestamp': -1 } });
+    if (lastPurchase) {
+      const lastMeatSalesNumber = parseInt(lastPurchase.meatSalesNumber.slice(2)); // Extract the numeric part
+      this.meatSalesNumber = `MS${(lastMeatSalesNumber + 1).toString().padStart(4, '0')}`; // Increment the numeric part
+    } else {
+      this.meatSalesNumber = 'MS0001'; // If no previous purchase exists, start with MS0001
+    }
+  }
 
-export default MeatSale;
+  // Calculate total prices and grand total
+  let grandTotal = 0;
+  this.sales.forEach((sale) => {
+    sale.totalPrice = sale.unitPrice * sale.quantity;
+    grandTotal += sale.totalPrice;
+  });
+  this.grandTotal = grandTotal;
+
+  next();
+});
+
+const MeatSales = model('MeatSales', meatSalesSchema);
+
+export default MeatSales;

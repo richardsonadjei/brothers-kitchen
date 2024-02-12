@@ -272,3 +272,40 @@ const viewPlatesAndBowlsPurchases = async (req, res) => {
 };
 
 export { viewPlatesAndBowlsPurchases };
+
+
+// controllers/otherConsumablesPurchase.controller.js
+import OtherConsumablesPurchase from '../models/otherConsumablesPurchase.model.js';
+
+// Controller to create a new Other Consumables Purchase record
+export const createOtherConsumablesPurchase = async (req, res) => {
+  try {
+    const newPurchase = new OtherConsumablesPurchase(req.body);
+    const savedPurchase = await newPurchase.save();
+    res.status(201).json(savedPurchase);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// Controller to get all Other Consumables Purchase records within a particular period
+export const getAllOtherConsumablesPurchasesWithinPeriod = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.query;
+
+    // Parse startDate and endDate strings into Date objects in UTC format
+    const parsedStartDate = new Date(startDate + 'T00:00:00Z'); // Assuming startDate is in YYYY-MM-DD format
+    const parsedEndDate = new Date(endDate + 'T23:59:59.999Z'); // Assuming endDate is in YYYY-MM-DD format
+
+    // Query OtherConsumablesPurchase records within the specified period
+    const purchases = await OtherConsumablesPurchase.find({
+      date: { $gte: parsedStartDate, $lte: parsedEndDate }
+    });
+
+    res.status(200).json(purchases);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+

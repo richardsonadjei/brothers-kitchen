@@ -1,5 +1,5 @@
 import express from 'express';
-import { recordBusinessAssetsPurchase, recordGasPurchase, recordIngredientPurchase, recordPlatesAndBowlsPurchase, viewAssetsPurchases, viewGasPurchases, viewIngredientPurchases, viewPlatesAndBowlsPurchases } from '../controllers/expense.controller.js';
+import { createOtherConsumablesPurchase,getAllOtherConsumablesPurchasesWithinPeriod, recordBusinessAssetsPurchase, recordGasPurchase, recordIngredientPurchase, recordPlatesAndBowlsPurchase, viewAssetsPurchases, viewGasPurchases, viewIngredientPurchases, viewPlatesAndBowlsPurchases } from '../controllers/expense.controller.js';
 
 const expenseRouter = express.Router();
 
@@ -12,5 +12,7 @@ expenseRouter.get('/view-ingredient-purchases', viewIngredientPurchases);
 expenseRouter.get('/view-gas-purchases', viewGasPurchases );
 expenseRouter.get('/view-assets-purchases', viewAssetsPurchases );
 expenseRouter.get('/view-bowls-purchases', viewPlatesAndBowlsPurchases );
+expenseRouter.post('/add-other-consumables-purchases', createOtherConsumablesPurchase);
+expenseRouter.get('/other-consumables-purchases', getAllOtherConsumablesPurchasesWithinPeriod);
 
 export default expenseRouter;

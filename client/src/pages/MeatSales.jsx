@@ -1,203 +1,267 @@
-// MeatSales.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Button, Form, FormGroup, Label, Input, Container, Row, Col, Table, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
 
-const meatTypeValues = [
-  { value: 'Intestines', label: 'Intestines' },
-  { value: 'Legs', label: 'Legs' },
-  { value: 'Liver', label: 'Liver' },
-  { value: 'Head', label: 'Head' },
-];
-
-const MeatSales = () => {
+const RecordMeatSales = () => {
   const { currentUser } = useSelector((state) => state.user);
-  const [meatSales, setMeatSales] = useState([]);
-  const [recordedBy, setRecordedBy] = useState(currentUser ? currentUser.userName : '');
-  const [paymentMethod, setPaymentMethod] = useState('cash');
-  const [modalData, setModalData] = useState(null);
-  const [selectedMeat, setSelectedMeat] = useState(null);
-  const [quantity, setQuantity] = useState(1); // Default quantity to 1
+  const [salesDate, setSalesDate] = useState(new Date().toISOString().substr(0, 10)); 
+  const [sales, setSales] = useState([]);
+  const [meatTypeOptions, setMeatTypeOptions] = useState([]);
+  const [selectedMeatType, setSelectedMeatType] = useState(null);
+  const [modalData, setModalData] = useState(null); // For modal display
+  const [overallTotal, setOverallTotal] = useState(0); // Overall total for the transaction
 
-  const handleMeatChange = () => {
-    if (selectedMeat) {
-      const pricePerUnit = getPricePerUnit(selectedMeat.value);
-      const subtotal = pricePerUnit * quantity;
+  useEffect(() => {
+    fetchMeatTypes();
+  }, []);
 
-      setMeatSales([...meatSales, { meatType: selectedMeat.label, quantity, pricePerUnit, subTotal: subtotal }]);
-      setSelectedMeat(null);
-      setQuantity(1); // Reset quantity to default after adding meat
+  const fetchMeatTypes = async () => {
+    try {
+      const response = await fetch('/api/all-meat-types');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      const options = data.map((meatType) => ({
+        value: meatType._id,
+        label: meatType.name,
+      }));
+      setMeatTypeOptions(options);
+    } catch (error) {
+      console.error('Error fetching meat types:', error);
     }
   };
 
-  const handleRemoveMeat = (index) => {
-    const updatedMeatSales = [...meatSales];
-    updatedMeatSales.splice(index, 1);
-    setMeatSales(updatedMeatSales);
+  const handleAddItem = () => {
+    if (selectedMeatType) {
+      const newItem = {
+        materialName: selectedMeatType.label,
+        unitPrice: 0,
+        quantity: 0,
+        subtotal: 0 // Initialize subtotal for each item
+      };
+      setSales([...sales, newItem]);
+      setSelectedMeatType(null);
+    }
+  };
+
+  const handleSaleChange = (index, field, value) => {
+    const updatedSales = [...sales];
+    updatedSales[index][field] = value;
+    
+    // Ensure both unit price and quantity are numbers before calculating subtotal
+    if (!isNaN(updatedSales[index].unitPrice) && !isNaN(updatedSales[index].quantity)) {
+      updatedSales[index].subtotal = updatedSales[index].unitPrice * updatedSales[index].quantity; // Update subtotal when unit price or quantity changes
+    } else {
+      updatedSales[index].subtotal = 0; // Set subtotal to 0 if either unit price or quantity is not a number
+    }
+    
+    setSales(updatedSales);
+    
+    // Update overall total by summing the subtotals of all items
+    const newOverallTotal = updatedSales.reduce((total, item) => total + item.subtotal, 0);
+    setOverallTotal(newOverallTotal);
+  };
+  
+
+  const handleRemoveItem = (index) => {
+    const updatedSales = [...sales];
+    updatedSales.splice(index, 1);
+    setSales(updatedSales);
+    
+    // Update overall total by recalculating the sum of subtotals
+    const newOverallTotal = updatedSales.reduce((total, item) => total + item.subtotal, 0);
+    setOverallTotal(newOverallTotal);
   };
 
   const handleSubmit = async () => {
     try {
+      // Calculate overall total before sending data to the backend
+      const newOverallTotal = sales.reduce((total, item) => total + item.subtotal, 0);
+
       const response = await fetch('/api/add-meat-sales', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          sales: meatSales,
-          recordedBy,
-          paymentMethod,
+          sales,
+          salesDate,
+          recordedBy: currentUser.userName 
         }),
       });
-
+  
       if (!response.ok) {
-        throw new Error(`Error recording meat sale: ${response.statusText}`);
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+  
+      // Show success message
+      alert('Meat sales recorded successfully');
+  
+      // Clear the form
+      setSales([]);
+      setSalesDate(new Date());
+      setSelectedMeatType(null);
 
+      // Display modal with recorded data
       const responseData = await response.json();
-      setModalData(responseData.data);
-      // You can handle modal visibility here (e.g., show modal)
+      setModalData(responseData);
     } catch (error) {
-      console.error(error);
-      // Handle error (e.g., show error message to the user)
+      // Handle errors and show an error message
+      console.error('Error recording meat sales:', error);
+      alert('Error recording meat sales');
     }
   };
 
-  const getPricePerUnit = (meatType) => {
-    switch (meatType) {
-      case 'Intestines':
-        return 10;
-      case 'Legs':
-        return 5;
-      case 'Liver':
-        return 10;
-      case 'Head':
-        return 10;
-      // Add more cases for other meat types if needed
-      default:
-        return 0; // Default price for unknown types
-    }
-  };
-  const resetState = () => {
-    setMeatSales([]);
-    setRecordedBy('');
-    setPaymentMethod('cash');
-    setSelectedMeat(null);
-    setQuantity(1);
-  };
-  const handleCloseModal = () => {
-    resetState();
-    setModalData(null);
-    window.location.reload(); // Reload the page
+  const closeModal = () => {
+    setModalData(null); // Close modal by resetting modalData
+    setOverallTotal(0);
   };
 
+  const getFormattedDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+  
+  // Inside your component:
+  <p>Sales Date: {getFormattedDate(modalData?.salesDate)}</p>
+  
   return (
-    <div className="meat-sales-container" style={{ backgroundImage: 'url("/orphiles.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '100vh' }}>
-      <h1>Record Meat Sale</h1>
-      <form style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: '20px', borderRadius: '10px' }}>
-      <label htmlFor="meatType" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Meat Type:</label>
-        <Select
-          id="meatType"
-          options={meatTypeValues}
-          value={selectedMeat}
-          onChange={(value) => setSelectedMeat(value)}
-          isSearchable
-          
-        />
-        <label htmlFor="quantity" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Quantity:</label>
-        <input
-          type="number"
-          id="quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          min="1"
-        />
-        <button type="button" onClick={handleMeatChange}>
-          Add Meat
-        </button>
+    <Container>
+      <h2>Record Meat Sales</h2>
+      <Row>
+          <Col md={12}>
+          <p style={{ fontWeight: 'bold', fontSize: '1.2em', color: 'red' }}>Total Amount: {overallTotal}</p>
+          </Col>
+        </Row>
+      <Form>
+        <Row>
+          <Col md={12}>
+            <Select
+              value={selectedMeatType}
+              onChange={(value) => setSelectedMeatType(value)}
+              options={meatTypeOptions}
+              placeholder="Select Meat Type"
+              isClearable
+              isSearchable
+            />
+            <Button color="primary" onClick={handleAddItem} disabled={!selectedMeatType}>
+              Add Item
+            </Button>
+          </Col>
+        </Row>
 
-        <ul>
-  {meatSales.map((sale, index) => (
-   <li key={index} style={{ color: 'white', backgroundColor: 'rgba(0, 0, 0, 0.5)', padding: '5px' }}>
-      {sale.meatType} (Quantity: {sale.quantity}) - Subtotal: Ghc {sale.subTotal}
-      <button
-        type="button"
-        onClick={() => handleRemoveMeat(index)}
-        style={{ backgroundColor: 'red', color: 'white', border: 'none', padding: '5px 10px', cursor: 'pointer' }}
-      >
-        Remove
-      </button>
-    </li>
-  ))}
-</ul>
-
-
-
-
-       
-
-        <label htmlFor="paymentMethod" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Payment Method:</label>
-        <select
-          id="paymentMethod"
-          value={paymentMethod}
-          onChange={(e) => setPaymentMethod(e.target.value)}
-        >
-          <option value="cash">Cash</option>
-          <option value="momo">Momo</option>
-          {/* Add other payment method options if needed */}
-        </select>
-        <label htmlFor="recordedBy" style={{ fontWeight: 'bold', fontSize: '16px', color: 'yellow'  }}>Recorded By:</label>
-        <input
-          type="text"
-          id="recordedBy"
-          value={recordedBy}
-          onChange={(e) => setRecordedBy(e.target.value)}
-          readOnly
-        />
-
-        <p style={{ fontWeight: 'bold', fontSize: '24px', color: 'yellow', backgroundColor: 'rgba(0, 0, 0, 0.5)', }}>Total Amount:Ghc {meatSales.reduce((total, sale) => total + sale.subTotal, 0)}</p>
-
-        <button type="button" onClick={handleSubmit}>
-          Record Sale
-        </button>
-      </form>
-
-      {/* Modal for displaying recorded data */}
-      {modalData && (
-        <div className="modal-container">
-          <div className="modal-content">
-            <h2>Meat Sale Recorded Successfully!</h2>
-            
-            <table>
+        <Row>
+          <Col md={12}>
+            <Table>
               <thead>
                 <tr>
                   <th>Meat Type</th>
+                  <th>Unit Price</th>
                   <th>Quantity</th>
-                  <th>Subtotal</th>
+                  <th>Subtotal</th> {/* New column for displaying subtotal */}
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {modalData.meats.map((meat, index) => (
+                {sales.map((item, index) => (
                   <tr key={index}>
-                    <td>{meat.type}</td>
-                    <td>{meat.quantity}</td>
-                    <td>{meat.subTotal}</td>
+                    <td>{item.materialName}</td>
+                    <td>
+                      <Input
+                        type="number"
+                        value={item.unitPrice}
+                        onChange={(e) => handleSaleChange(index, 'unitPrice', parseFloat(e.target.value))}
+                      />
+                    </td>
+                    <td>
+                      <Input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => handleSaleChange(index, 'quantity', parseInt(e.target.value))}
+                      />
+                    </td>
+                    <td>{item.subtotal}</td> {/* Display subtotal */}
+                    <td>
+                      <Button color="danger" onClick={() => handleRemoveItem(index)}>
+                        Remove
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </Table>
+          </Col>
+        </Row>
 
-            <p>Total Amount: {modalData.totalAmount}</p>
-            <p>Payment Method: {modalData.paymentMethod}</p>
-            <p>Served By: {modalData.recordedBy}</p>
-            <button className="close-button" onClick={handleCloseModal}>
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+        <Row>
+          <Col md={6}>
+            <FormGroup>
+              <Label for="salesDate">Sales Date</Label>
+              <Input
+                type="date"
+                name="salesDate"
+                id="salesDate"
+                value={salesDate}
+                onChange={(e) => setSalesDate(e.target.value)}
+              />
+            </FormGroup>
+          </Col>
+          <Col md={6}>
+            <FormGroup>
+              <Label for="recordedBy">Recorded By</Label>
+              <Input
+                type="text"
+                name="recordedBy"
+                id="recordedBy"
+                value={currentUser ? currentUser.userName : ''}
+                readOnly
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+
+        
+
+        <Button color="success" onClick={handleSubmit}>
+          Record Sales
+        </Button>
+      </Form>
+
+      {/* Modal for Recorded Data */}
+      <Modal isOpen={modalData !== null} toggle={closeModal}>
+        <ModalHeader toggle={closeModal}>Meat Sales Recorded Successfully</ModalHeader>
+        <ModalBody>
+          <Table>
+            <thead>
+              <tr>
+                <th>Meat Type</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modalData?.sales?.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.materialName}</td>
+                  <td>{item.unitPrice}</td>
+                  <td>{item.quantity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <p>Total Amount: {modalData?.grandTotal}</p>
+          <p>Sales Date: {getFormattedDate(modalData?.salesDate)}</p>
+          <p>Recorded By: {modalData?.recordedBy}</p>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={closeModal}>Close</Button>
+        </ModalFooter>
+      </Modal>
+    </Container>
   );
 };
 
-export default MeatSales;
+export default RecordMeatSales;

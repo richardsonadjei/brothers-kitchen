@@ -7,6 +7,7 @@ import path from 'path';
 import meatSalesRouter from './routes/meatSales.routes.js';
 import expenseRouter from './routes/expense.routes.js';
 import router from './routes/meatIssue.routes.js';
+import extrasRouter from './routes/extras.routes.js';
 dotenv.config();
 
 mongoose
@@ -29,6 +30,7 @@ app.use('/api/', userRouter);
 app.use('/api/', meatSalesRouter);
 app.use('/api/', expenseRouter);
 app.use('/api/', router);
+app.use('/api/', extrasRouter);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 

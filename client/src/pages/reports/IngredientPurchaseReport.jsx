@@ -83,9 +83,9 @@ const IngredientPurchaseReport = () => {
                 <th>#</th>
                 <th>Description</th>
                 <th>Purchase Date</th>
-                <th>Recorded By</th>
                 <th>Ingredient Purchase Number</th>
                 <th>Amount</th>
+                <th>Recorded By</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -95,9 +95,9 @@ const IngredientPurchaseReport = () => {
                   <td>{index + 1}</td>
                   <td>{purchase.description.map((item) => item.itemName).join(', ')}</td>
                   <td>{new Date(purchase.purchaseDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
-                  <td>{purchase.recordedBy}</td>
                   <td>{purchase.ingredientPurchaseNumber}</td>
                   <td>{purchase.description.reduce((total, item) => total + item.amount, 0)}</td>
+                  <td>{purchase.recordedBy}</td>
                   <td>
                     <Button color="info" onClick={() => viewDetails(purchase)}>
                       View Details

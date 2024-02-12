@@ -84,6 +84,9 @@ export default function Header() {
                   <NavDropdown.Item as={Link} to="/assets-purchase-report">
                     Assets Purchase Report 
                   </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to="/other-consumable-purchase-report">
+                  Other Consumables Purchase Report 
+                  </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to="/income-variations-report">
                 Income Variations Report
               </NavDropdown.Item>
@@ -106,20 +109,32 @@ export default function Header() {
             {/* Expense dropdown */}
             <NavDropdown title="Expense" id="expense-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
               <NavDropdown.Item as={Link} to="/purchase-ingreident">
-                Record Ingredients Purchase
+              Purchase Food Ingredients 
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/add-other-expense">
-                Record Other Consumable  Purchase
+              <NavDropdown.Item as={Link} to="/other-consumable-purchase">
+              Purchase Other Consumable  
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/gas-purchase">
-                Record Gas  Purchase
+                Purchase Gas  
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/plates-purchase">
-                Record Plates And Bowl Purchase
+                Purchase Plates And Bowl 
               </NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/business-assets-purchase">
                 Purchase Business Asset
               </NavDropdown.Item>
+
+              {/* Add more expense items as needed */}
+            </NavDropdown>
+              {/* Expense dropdown */}
+              <NavDropdown title="Extras" id="expense-dropdown" style={{ color: 'white !important', fontWeight: 'bold' }}>
+              <NavDropdown.Item as={Link} to="/new-meat-type">
+                Add New Meat Type
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/add-other-expense">
+                Record Other Consumable  Purchase
+              </NavDropdown.Item>
+             
 
               {/* Add more expense items as needed */}
             </NavDropdown>
